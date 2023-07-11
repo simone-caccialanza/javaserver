@@ -33,7 +33,7 @@ public class DatabaseController {
             @PathVariable(value = "id") UUID personId
     ) {
         try {
-            Optional<Person> dbResult = repositoryService.retrievePerson(personId);
+            Optional<Person> dbResult = repositoryService.get(personId);
             return dbResult.map(person ->
                             new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, person), HttpStatus.OK))
                     .orElseGet(() ->
