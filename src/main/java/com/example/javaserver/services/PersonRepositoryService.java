@@ -1,6 +1,6 @@
 package com.example.javaserver.services;
 
-import com.example.javaserver.database.entities.Person;
+import com.example.javaserver.database.entities.PersonDbEntity;
 import com.example.javaserver.database.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class PersonRepositoryService implements RepositoryService<Person,UUID>{
+public class PersonRepositoryService implements RepositoryService<PersonDbEntity,UUID>{
 
     private final PersonRepository personRepository;
 
@@ -19,15 +19,15 @@ public class PersonRepositoryService implements RepositoryService<Person,UUID>{
         this.personRepository = personRepository;
     }
 
-    public Person save(Person person){
-        return personRepository.save(person);
+    public PersonDbEntity save(PersonDbEntity personDbEntity){
+        return personRepository.save(personDbEntity);
     }
 
-    public Optional<Person> get(UUID id){
+    public Optional<PersonDbEntity> get(UUID id){
         return personRepository.findById(id);
     }
 
-    public Person update(@NotNull Person person){
-        return personRepository.save(person);
+    public PersonDbEntity update(@NotNull PersonDbEntity personDbEntity){
+        return personRepository.save(personDbEntity);
     }
 }

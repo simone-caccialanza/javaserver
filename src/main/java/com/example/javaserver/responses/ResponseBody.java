@@ -1,6 +1,7 @@
 package com.example.javaserver.responses;
 
-import com.example.javaserver.database.entities.Person;
+import com.example.javaserver.database.entities.PersonDbEntity;
+import com.example.javaserver.domain.PersonDomainEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -33,7 +34,7 @@ public class ResponseBody {
 
     public ResponseBody(Status status) {
         this.status = status;
-        this.payload = new Person();
+        this.payload = new PersonDomainEntity();
         this.errors = new LinkedList<>(); //can be better
     }
 

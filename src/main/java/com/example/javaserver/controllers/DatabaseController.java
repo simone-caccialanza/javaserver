@@ -1,6 +1,7 @@
 package com.example.javaserver.controllers;
 
-import com.example.javaserver.database.entities.Person;
+import com.example.javaserver.database.entities.PersonDbEntity;
+import com.example.javaserver.domain.PersonDomainEntity;
 import com.example.javaserver.responses.Error;
 import com.example.javaserver.responses.ResponseBody;
 import com.example.javaserver.services.PersonRepositoryService;
@@ -33,9 +34,9 @@ public class DatabaseController {
             @PathVariable(value = "id") UUID personId
     ) {
         try {
-            Optional<Person> dbResult = repositoryService.get(personId);
-            return dbResult.map(person ->
-                            new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, person), HttpStatus.OK))
+            Optional<PersonDbEntity> dbResult = repositoryService.get(personId);
+            return dbResult.map(personDbEntity ->
+                            new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, personDbEntity.toDomainEntity()), HttpStatus.OK))
                     .orElseGet(() ->
                             new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO, List.of(new Error("entity not found"))),
                                     HttpStatus.OK));
@@ -56,9 +57,9 @@ public class DatabaseController {
     public ResponseEntity<ResponseBody> postPerson(
             @Valid @RequestBody DatabaseRequestBody body
     ) {
-        Person dbResult;
+        PersonDbEntity dbResult;
         try {
-            dbResult = repositoryService.save(body.person);
+            dbResult = repositoryService.save(body.personDbEntity);
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, dbResult), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO)
@@ -68,7 +69,7 @@ public class DatabaseController {
 
     }
 
-    private record DatabaseRequestBody(Person person) {
+    private record DatabaseRequestBody(PersonDbEntity personDbEntity) {
     }
 }
 
