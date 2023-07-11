@@ -27,8 +27,7 @@ public class PersonRepositoryService implements RepositoryService<Person,UUID>{
         return personRepository.findById(id);
     }
 
-//    public Person update(Person person){
-//        Person personToUpdate = personRepository.getReferenceById(person.getId());
-//        personToUpdate.;
-//    }
+    public Person update(@NotNull Person person){
+        return personRepository.save(person);
+    }
 }
