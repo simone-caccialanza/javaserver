@@ -4,12 +4,14 @@ import com.example.javaserver.domain.PersonDomainEntity;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class PersonDbEntity extends DbEntity implements DomainEntityMapping<PersonDomainEntity> {
 
     private String name;

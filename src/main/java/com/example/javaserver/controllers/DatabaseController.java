@@ -34,10 +34,13 @@ public class DatabaseController {
     public ResponseEntity<ResponseBody> getPerson(
             @PathVariable(value = "id") UUID personId
     ) {
+        logger.info("Received request to retrieve a person with id {}", personId);
         try {
             Optional<PersonDbEntity> dbResult = repositoryService.get(personId);
-            return dbResult.map(personDbEntity ->
-                            new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, personDbEntity.toDomainEntity()), HttpStatus.OK))
+            return dbResult.map(personDbEntity -> {
+                        logger.debug("Retrieved person from db: {}", personDbEntity);
+                        return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, personDbEntity.toDomainEntity()), HttpStatus.OK);
+                    })
                     .orElseGet(() ->
                             new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO, List.of(new Error("entity not found"))),
                                     HttpStatus.OK));
@@ -58,9 +61,11 @@ public class DatabaseController {
     public ResponseEntity<ResponseBody> postPerson(
             @Valid @RequestBody DatabaseRequestBody body
     ) {
+        logger.info("Received request to add a new person with id {}", body.personDomainEntity.getId());
         PersonDbEntity dbResult;
         try {
             dbResult = repositoryService.save(body.personDomainEntity.toDbEntity());
+            logger.debug("Saved person into db: {}", dbResult);
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, dbResult.toDomainEntity()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO)

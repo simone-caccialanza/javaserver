@@ -16,7 +16,7 @@ public class ResponseBody {
     @JsonProperty
     private final List<Error> errors;
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final Payload payload;
 
     public ResponseBody(Status status, Payload payload) {
@@ -42,5 +42,5 @@ public class ResponseBody {
         return this;
     }
 
-    public enum Status {OK,KO}
+    public enum Status {OK, KO}
 }
