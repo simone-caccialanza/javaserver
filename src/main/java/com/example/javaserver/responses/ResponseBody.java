@@ -1,6 +1,5 @@
 package com.example.javaserver.responses;
 
-import com.example.javaserver.database.entities.PersonDbEntity;
 import com.example.javaserver.domain.PersonDomainEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,9 +17,9 @@ public class ResponseBody {
     private final List<Error> errors;
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final IPayload payload;
+    private final Payload payload;
 
-    public ResponseBody(Status status, IPayload payload) {
+    public ResponseBody(Status status, Payload payload) {
         this.status = status;
         this.payload = payload;
         this.errors = Collections.emptyList();

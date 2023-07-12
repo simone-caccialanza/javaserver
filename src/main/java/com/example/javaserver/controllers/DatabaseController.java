@@ -5,6 +5,7 @@ import com.example.javaserver.domain.PersonDomainEntity;
 import com.example.javaserver.responses.Error;
 import com.example.javaserver.responses.ResponseBody;
 import com.example.javaserver.services.PersonRepositoryService;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,8 @@ public class DatabaseController {
     ) {
         PersonDbEntity dbResult;
         try {
-            dbResult = repositoryService.save(body.personDbEntity);
-            return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, dbResult), HttpStatus.OK);
+            dbResult = repositoryService.save(body.personDomainEntity.toDbEntity());
+            return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, dbResult.toDomainEntity()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO)
                     .addError(new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage())),
@@ -69,7 +70,7 @@ public class DatabaseController {
 
     }
 
-    private record DatabaseRequestBody(PersonDbEntity personDbEntity) {
+    private record DatabaseRequestBody(@JsonProperty("person") PersonDomainEntity personDomainEntity) {
     }
 }
 
