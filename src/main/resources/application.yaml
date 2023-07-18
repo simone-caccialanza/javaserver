@@ -13,11 +13,27 @@ spring:
     console:
       enabled: true
       path: /h2
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+  mail:
+    host: smtp.freesmtpservers.com
+    port: 25
+    username: email@ahduio.com
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: true
 logging:
   level:
     org:
       quartz: INFO
       hibernate: INFO
       springframework: INFO
+      springframework.mail: INFO
     com.example.javaserver: DEBUG
     com.zaxxer.hikari: INFO
