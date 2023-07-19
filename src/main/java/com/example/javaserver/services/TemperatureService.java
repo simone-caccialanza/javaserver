@@ -1,16 +1,19 @@
 package com.example.javaserver.services;
 
+import com.example.javaserver.gateway.OpenMeteoGateway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+import java.util.Objects;
 
 @Service
 public class TemperatureService {
 
-    public String getTemperature() {
-        var response = new RestTemplate().getForEntity(
-                "https://api.open-meteo.com/v1/forecast?latitude=45.40&longitude=9.34&current_weather=true",
-                String.class);
+    @Autowired
+    OpenMeteoGateway gateway;
 
-        return response.getBody();
+    public String getTemperature() {
+        var response = gateway.getForecast(45.40, 9.34);
+        return Objects.requireNonNull(response.getBody()).current_weather().temperature().toString();
     }
 }

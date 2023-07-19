@@ -41,3 +41,6 @@ logging:
       springframework.mail: INFO
     com.example.javaserver: DEBUG
     com.zaxxer.hikari: INFO
+open-meteo:
+  base-url: https://api.open-meteo.com
+  forecast: /v1/forecast

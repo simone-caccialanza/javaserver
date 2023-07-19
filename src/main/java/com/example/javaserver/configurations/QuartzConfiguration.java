@@ -30,17 +30,17 @@ public class QuartzConfiguration {
     }
 
     @Bean
-    public JobDetailFactoryBean myJobDetail() {
+    public JobDetailFactoryBean jobDetail() {
         JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
         jobDetailFactoryBean.setJobClass(TemperatureJob.class);
-        jobDetailFactoryBean.setName("Temperature1");
-        jobDetailFactoryBean.setGroup("Temperature1");
+        jobDetailFactoryBean.setName("Temperature");
+        jobDetailFactoryBean.setGroup("Temperature");
         jobDetailFactoryBean.setDurability(true);
         return jobDetailFactoryBean;
     }
 
     @Bean
-    public SimpleTriggerFactoryBean myJobTrigger(JobDetail jobDetail) {
+    public SimpleTriggerFactoryBean jobTrigger(JobDetail jobDetail) {
         SimpleTriggerFactoryBean triggerFactoryBean = new SimpleTriggerFactoryBean();
         triggerFactoryBean.setJobDetail(jobDetail);
         triggerFactoryBean.setRepeatInterval(5000); // Run every 5 seconds
