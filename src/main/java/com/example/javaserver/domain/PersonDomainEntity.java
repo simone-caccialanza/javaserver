@@ -22,7 +22,7 @@ public class PersonDomainEntity extends DomainEntity implements Payload, DbEntit
     @JsonProperty("age")
     private Integer age;
     @JsonProperty("birthDate")
-    @JsonFormat(pattern = "YYYY-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
     @Override

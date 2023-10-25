@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
@@ -23,7 +22,7 @@ public class QuartzConfiguration {
     @Bean
     @QuartzDataSource
     public DataSource quartzDataSource() {
-        return DataSourceBuilder.create().url("jdbc:h2:mem:spring-quartz;INIT=RUNSCRIPT FROM 'classpath:/org/quartz/impl/jdbcjobstore/tables_h2.sql'") // Replace with your H2 database URL
+        return DataSourceBuilder.create().url("jdbc:h2:~/javaserver;MODE=Oracle") // Replace with your H2 database URL
                 .driverClassName("org.h2.Driver")
                 .username("sa")
                 .password("").build();
@@ -43,7 +42,7 @@ public class QuartzConfiguration {
     public SimpleTriggerFactoryBean jobTrigger(JobDetail jobDetail) {
         SimpleTriggerFactoryBean triggerFactoryBean = new SimpleTriggerFactoryBean();
         triggerFactoryBean.setJobDetail(jobDetail);
-        triggerFactoryBean.setRepeatInterval(5000); // Run every 5 seconds
+        triggerFactoryBean.setRepeatInterval(50000); // Run every 5 seconds
         triggerFactoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         return triggerFactoryBean;
     }
@@ -61,7 +60,6 @@ public class QuartzConfiguration {
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean(Trigger trigger, JobDetail job, DataSource quartzDataSource) {
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
-        schedulerFactory.setConfigLocation(new ClassPathResource("quartz.properties"));
         schedulerFactory.setOverwriteExistingJobs(true);
         schedulerFactory.setJobFactory(springBeanJobFactory());
         schedulerFactory.setJobDetails(job);

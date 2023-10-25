@@ -28,7 +28,7 @@ public class DatabaseController {
     private PersonRepositoryService repositoryService;
 
     @GetMapping(
-            value = "/person/{id}",
+            value = "/person/{id}/",
             produces = "application/json"
     )
     public ResponseEntity<ResponseBody> getPerson(
