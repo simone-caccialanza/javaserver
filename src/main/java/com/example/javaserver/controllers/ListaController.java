@@ -49,10 +49,12 @@ public class ListaController {
 
     @PostMapping("/items")
     public ResponseEntity<ResponseBody> saveItems(@Valid @RequestBody ListaRequestBody body) {
-        logger.info("Received request to add a new Lista with itemId {}", body.listaDomainEntity.getId());
-        ListaDbEntity dbResult;
+        Optional<UUID> listaId = Optional.ofNullable(body.listaDomainEntity.getId());
+        if (listaId.isPresent()) logger.info("Received request to update Lista with id {}", listaId);
+        else logger.info("Received request to add a new Lista");
+
         try {
-            dbResult = listaService.save(body.listaDomainEntity.toDbEntity());
+            ListaDbEntity dbResult = listaService.save(body.listaDomainEntity.toDbEntity());
             logger.debug("Saved Lista into db: {}", dbResult);
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, dbResult.toDomainEntity()), HttpStatus.OK);
         } catch (Exception e) {
