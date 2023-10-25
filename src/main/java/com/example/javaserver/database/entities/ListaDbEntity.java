@@ -14,7 +14,6 @@ import java.util.UUID;
 @Table(name = "lista")
 public class ListaDbEntity extends DbEntity implements DomainEntityMapping<ListaDomainEntity> {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID listaId;
 

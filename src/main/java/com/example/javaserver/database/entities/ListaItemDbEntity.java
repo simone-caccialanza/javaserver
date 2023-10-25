@@ -3,7 +3,6 @@ package com.example.javaserver.database.entities;
 import com.example.javaserver.domain.ListaItemDomainEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.UUID;
 @Table(name = "lista_item")
 public class ListaItemDbEntity extends DbEntity implements DomainEntityMapping<ListaItemDomainEntity> {
 
-    @Id
     @Column(name = "itemId")
     private String itemId;
     @Column(name = "description")
