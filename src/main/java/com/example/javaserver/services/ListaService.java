@@ -40,8 +40,10 @@ public class ListaService {
 
     public ListaDomainEntity saveItems(@NotNull ListaDomainEntity entity) {
         val oldListItems = this.get(entity.getId()).get().getItems();
-        val newListItem = entity.getItems().stream().map(listaItemMapper::mapToDbEntity).toList();
-        val newItemsToSave = newListItem.stream().filter(newItem -> !oldListItems.contains(newItem)).toList();
+        val newItemsToSave = entity.getItems().stream()
+                .filter(newItem -> !oldListItems.contains(newItem))
+                .map(listaItemMapper::mapToDbEntity)
+                .toList();
         val dbResult = listaItemRepository.saveAll(newItemsToSave)
                 .stream().map(listaItemMapper::mapToDomainEntity).toList();
         return new ListaDomainEntity(entity.getId(), dbResult);

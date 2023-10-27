@@ -24,4 +24,19 @@ public class ListaItemDomainEntity extends DomainEntity implements DbEntityMappi
     public ListaItemDbEntity toDbEntity() {
         return new ListaItemDbEntity(id, description, listaId);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ListaItemDomainEntity that = (ListaItemDomainEntity) o;
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
