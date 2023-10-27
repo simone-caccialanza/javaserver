@@ -7,6 +7,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +16,9 @@ public class TemperatureJob implements Job {
     private static final Logger logger = LoggerFactory.getLogger(TemperatureJob.class);
 
     private TemperatureService temperatureService;
+
+    @Value("${jobs.temperature-job.enabled}")
+    private static Boolean enabled;
 
     public TemperatureJob() {
         // Default constructor
@@ -27,6 +31,10 @@ public class TemperatureJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("Temperature is: {}", temperatureService.getTemperature());
+        if (Boolean.TRUE.equals(enabled)) {
+            logger.info("Temperature is: {}", temperatureService.getTemperature());
+        } else {
+            logger.debug("Temperature Job not enabled");
+        }
     }
 }

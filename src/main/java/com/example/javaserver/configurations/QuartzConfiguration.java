@@ -3,6 +3,7 @@ package com.example.javaserver.configurations;
 import com.example.javaserver.jobs.AutoWiringSpringBeanJobFactory;
 import com.example.javaserver.jobs.TemperatureJob;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -29,20 +30,26 @@ public class QuartzConfiguration {
     }
 
     @Bean
-    public JobDetailFactoryBean jobDetail() {
+    public JobDetailFactoryBean jobDetail(
+            @Value("${jobs.temperature-job.name}") String jobName,
+            @Value("${jobs.temperature-job.group}") String jobGroup
+    ) {
         JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
         jobDetailFactoryBean.setJobClass(TemperatureJob.class);
-        jobDetailFactoryBean.setName("Temperature");
-        jobDetailFactoryBean.setGroup("Temperature");
+        jobDetailFactoryBean.setName(jobName);
+        jobDetailFactoryBean.setGroup(jobGroup);
         jobDetailFactoryBean.setDurability(true);
         return jobDetailFactoryBean;
     }
 
     @Bean
-    public SimpleTriggerFactoryBean jobTrigger(JobDetail jobDetail) {
+    public SimpleTriggerFactoryBean jobTrigger(
+            JobDetail jobDetail,
+            @Value("${jobs.temperature-job.repeat-interval}") int repeatInterval
+    ) {
         SimpleTriggerFactoryBean triggerFactoryBean = new SimpleTriggerFactoryBean();
         triggerFactoryBean.setJobDetail(jobDetail);
-        triggerFactoryBean.setRepeatInterval(50000); // Run every 5 seconds
+        triggerFactoryBean.setRepeatInterval(repeatInterval); // Run every 5 seconds
         triggerFactoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         return triggerFactoryBean;
     }

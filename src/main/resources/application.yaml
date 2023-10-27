@@ -41,6 +41,12 @@ logging:
       springframework.mail: INFO
     com.example.javaserver: DEBUG
     com.zaxxer.hikari: INFO
+jobs:
+  temperature-job:
+    enabled: false
+    name: Temperature
+    group: Temperature
+    repeat-interval: 10000
 open-meteo:
   base-url: https://api.open-meteo.com
   forecast: /v1/forecast
