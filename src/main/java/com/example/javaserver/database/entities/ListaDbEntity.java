@@ -3,6 +3,7 @@ package com.example.javaserver.database.entities;
 import com.example.javaserver.domain.ListaDomainEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "lista")
+@Getter
 public class ListaDbEntity extends DbEntity implements DomainEntityMapping<ListaDomainEntity> {
 
     @GeneratedValue(strategy = GenerationType.UUID)

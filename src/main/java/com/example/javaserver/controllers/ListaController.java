@@ -7,12 +7,16 @@ import com.example.javaserver.responses.ResponseBody;
 import com.example.javaserver.services.ListaService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,14 +53,14 @@ public class ListaController {
 
     @PostMapping("/items")
     public ResponseEntity<ResponseBody> saveItems(@Valid @RequestBody ListaRequestBody body) {
-        Optional<UUID> listaId = Optional.ofNullable(body.listaDomainEntity.getId());
-        if (listaId.isPresent()) logger.info("Received request to update Lista with id {}", listaId);
-        else logger.info("Received request to add a new Lista");
+        logger.info("Received request to add a new Lista");
+        logger.debug("{}", body);
 
         try {
-            ListaDbEntity dbResult = listaService.save(body.listaDomainEntity.toDbEntity());
-            logger.debug("Saved Lista into db: {}", dbResult);
-            return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, dbResult.toDomainEntity()), HttpStatus.OK);
+            val result = listaService.save(body.listaDomainEntity);
+            logger.info("Saved Lista into db with listaId: {}", result.getId());
+            logger.debug("{}", result);
+            return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, result), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO)
                     .addError(new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage())),
@@ -64,6 +68,28 @@ public class ListaController {
         }
     }
 
-    private record ListaRequestBody(@JsonProperty("lista") ListaDomainEntity listaDomainEntity) {
+    @PatchMapping("/items")
+    public ResponseEntity<ResponseBody> updateItems(
+            @Validated(ListaDomainEntity.PatchEndpoint.class) @RequestBody ListaRequestBody body,
+            @Valid @NotNull @RequestParam @Pattern(regexp = UUID_REGEX) UUID listaId) {
+        logger.info("Received request to update a Lista with listaId: {}", listaId);
+        logger.debug("{}", body);
+
+        try {
+            val result = listaService.saveItems(body.listaDomainEntity);
+            logger.info("Saved {} new items into db to listaId {}", result.getItems().size(), listaId);
+            logger.debug("{}", result);
+            return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, result), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO)
+                    .addError(new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage())),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+    private record ListaRequestBody(@Valid @NotNull @JsonProperty("lista") ListaDomainEntity listaDomainEntity) {
+    }
+
+
+    private static final String UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
 }

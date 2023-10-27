@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
@@ -14,9 +16,10 @@ public class ListaItemDomainEntity extends DomainEntity implements DbEntityMappi
 
     private String id;
     private String description;
+    private UUID listaId;
 
     @Override
     public ListaItemDbEntity toDbEntity() {
-        return new ListaItemDbEntity(id, description, null);
+        return new ListaItemDbEntity(id, description, listaId);
     }
 }
