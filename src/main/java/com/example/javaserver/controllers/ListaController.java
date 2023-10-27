@@ -70,7 +70,7 @@ public class ListaController {
 
     @PatchMapping("/items")
     public ResponseEntity<ResponseBody> updateItems(
-            @Validated(ListaDomainEntity.PatchEndpoint.class) @RequestBody ListaRequestBody body,
+            @Validated(ListaDomainEntity.NotNullId.class) @RequestBody ListaRequestBody body,
             @Valid @NotNull @RequestParam @Pattern(regexp = UUID_REGEX) UUID listaId) {
         logger.info("Received request to update a Lista with listaId: {}", listaId);
         logger.debug("{}", body);
@@ -80,6 +80,25 @@ public class ListaController {
             logger.info("Saved {} new items into db to listaId {}", result.getItems().size(), listaId);
             logger.debug("{}", result);
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, result), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO)
+                    .addError(new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage())),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/items")
+    public ResponseEntity<ResponseBody> deleteItems(
+            @Validated(ListaDomainEntity.NotNullId.class) @RequestBody ListaRequestBody body,
+            @Valid @NotNull @RequestParam @Pattern(regexp = UUID_REGEX) UUID listaId) {
+        logger.info("Received request to delete items from a Lista with listaId: {}", listaId);
+        logger.debug("{}", body);
+
+        try {
+            listaService.deleteItems(body.listaDomainEntity);
+            logger.info("Deleted {} items from db", body.listaDomainEntity.getItems().size());
+            logger.debug("{}", body.listaDomainEntity.getItems());
+            return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO)
                     .addError(new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage())),

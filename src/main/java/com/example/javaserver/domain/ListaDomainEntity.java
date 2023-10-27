@@ -13,7 +13,7 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ListaDomainEntity extends DomainEntity implements Payload, DbEntityMapping<ListaDbEntity> {
-    @NotNull(groups = PatchEndpoint.class)
+    @NotNull(groups = NotNullId.class)
     @JsonProperty("id")
     private UUID id;
     @JsonProperty("items")
@@ -30,6 +30,6 @@ public class ListaDomainEntity extends DomainEntity implements Payload, DbEntity
         return new ListaDbEntity(id, items.stream().map(ListaItemDomainEntity::toDbEntity).toList());
     }
 
-    public interface PatchEndpoint {
+    public interface NotNullId {
     }
 }

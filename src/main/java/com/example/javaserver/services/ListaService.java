@@ -49,4 +49,9 @@ public class ListaService {
     public Optional<ListaDbEntity> get(UUID uuid) {
         return listaRepository.findById(uuid);
     }
+
+    public void deleteItems(@NotNull ListaDomainEntity entity) {
+        val listaItemDbEntityList = entity.getItems().stream().map(listaItemMapper::mapToDbEntity).toList();
+        listaItemRepository.deleteAll(listaItemDbEntityList);
+    }
 }
