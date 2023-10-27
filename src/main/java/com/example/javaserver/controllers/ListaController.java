@@ -1,6 +1,5 @@
 package com.example.javaserver.controllers;
 
-import com.example.javaserver.database.entities.ListaDbEntity;
 import com.example.javaserver.domain.ListaDomainEntity;
 import com.example.javaserver.responses.Error;
 import com.example.javaserver.responses.ResponseBody;
@@ -33,13 +32,13 @@ public class ListaController {
     private ListaService listaService;
 
     @GetMapping("/items")
-    public ResponseEntity<ResponseBody> getItems(@RequestParam("id") UUID id) {
+    public ResponseEntity<ResponseBody> getItems(@RequestParam("listaId") UUID listaId) {
         try {
-            logger.info("Received request to retrieve a Lista with itemId {}", id);
-            Optional<ListaDbEntity> dbResult = listaService.get(id);
-            return dbResult.map(listaDbEntity -> {
-                        logger.debug("Retrieved Lista from db: {}", listaDbEntity);
-                        return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, listaDbEntity.toDomainEntity()), HttpStatus.OK);
+            logger.info("Received request to retrieve a Lista with itemId {}", listaId);
+            Optional<ListaDomainEntity> serviceResult = listaService.get(listaId);
+            return serviceResult.map(result -> {
+                        logger.debug("Retrieved Lista from db: {}", result);
+                        return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, result), HttpStatus.OK);
                     })
                     .orElseGet(() ->
                             new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO, List.of(new Error("entity not found"))),
@@ -70,14 +69,13 @@ public class ListaController {
 
     @PatchMapping("/items")
     public ResponseEntity<ResponseBody> updateItems(
-            @Validated(ListaDomainEntity.NotNullId.class) @RequestBody ListaRequestBody body,
-            @Valid @NotNull @RequestParam @Pattern(regexp = UUID_REGEX) UUID listaId) {
-        logger.info("Received request to update a Lista with listaId: {}", listaId);
+            @Validated(ListaDomainEntity.NotNullId.class) @RequestBody ListaRequestBody body) {
+        logger.info("Received request to update a Lista with listaId: {}", body.listaDomainEntity.getId());
         logger.debug("{}", body);
 
         try {
             val result = listaService.saveItems(body.listaDomainEntity);
-            logger.info("Saved {} new items into db to listaId {}", result.getItems().size(), listaId);
+            logger.info("Saved {} new items into db to listaId {}", result.getItems().size(), body.listaDomainEntity.getId());
             logger.debug("{}", result);
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, result), HttpStatus.OK);
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.example.javaserver.domain;
 
 import com.example.javaserver.database.entities.ListaItemDbEntity;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,7 @@ public class ListaItemDomainEntity extends DomainEntity implements DbEntityMappi
 
     private String id;
     private String description;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID listaId;
 
     @Override

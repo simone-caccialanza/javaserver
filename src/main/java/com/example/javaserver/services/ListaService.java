@@ -1,6 +1,5 @@
 package com.example.javaserver.services;
 
-import com.example.javaserver.database.entities.ListaDbEntity;
 import com.example.javaserver.database.repositories.ListaItemRepository;
 import com.example.javaserver.database.repositories.ListaRepository;
 import com.example.javaserver.domain.ListaDomainEntity;
@@ -40,14 +39,17 @@ public class ListaService {
     }
 
     public ListaDomainEntity saveItems(@NotNull ListaDomainEntity entity) {
-        val listaItemDbEntityList = entity.getItems().stream().map(listaItemMapper::mapToDbEntity).toList();
-        val dbResult = listaItemRepository.saveAll(listaItemDbEntityList)
+        val oldListItems = this.get(entity.getId()).get().getItems();
+        val newListItem = entity.getItems().stream().map(listaItemMapper::mapToDbEntity).toList();
+        val newItemsToSave = newListItem.stream().filter(newItem -> !oldListItems.contains(newItem)).toList();
+        val dbResult = listaItemRepository.saveAll(newItemsToSave)
                 .stream().map(listaItemMapper::mapToDomainEntity).toList();
         return new ListaDomainEntity(entity.getId(), dbResult);
     }
 
-    public Optional<ListaDbEntity> get(UUID uuid) {
-        return listaRepository.findById(uuid);
+    public Optional<ListaDomainEntity> get(UUID uuid) {
+        val dbResult = listaRepository.findById(uuid);
+        return dbResult.map(listaMapper::mapToDomainEntity);
     }
 
     public void deleteItems(@NotNull ListaDomainEntity entity) {
