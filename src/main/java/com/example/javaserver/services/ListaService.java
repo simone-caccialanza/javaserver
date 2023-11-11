@@ -5,6 +5,7 @@ import com.example.javaserver.database.repositories.ListaRepository;
 import com.example.javaserver.domain.ListaDomainEntity;
 import com.example.javaserver.mappers.ListaItemMapper;
 import com.example.javaserver.mappers.ListaMapper;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +33,23 @@ public class ListaService {
         this.listaItemMapper = listaItemMapper;
     }
 
+    @Transactional
     public ListaDomainEntity save(ListaDomainEntity entity) {
         val listaDbEntity = listaMapper.mapToDbEntity(entity);
+        transactionalSaveListaId(listaDbEntity.getId());
         val dbResult = listaRepository.save(listaDbEntity);
         return listaMapper.mapToDomainEntity(dbResult);
     }
 
     public ListaDomainEntity saveItems(@NotNull ListaDomainEntity entity) {
-        val oldListItems = this.get(entity.getId()).get().getItems();
         val newItemsToSave = entity.getItems().stream()
-                .filter(newItem -> !oldListItems.contains(newItem))
+                .filter(item -> item.getId() == null)
                 .map(listaItemMapper::mapToDbEntity)
                 .toList();
         val dbResult = listaItemRepository.saveAll(newItemsToSave)
                 .stream().map(listaItemMapper::mapToDomainEntity).toList();
-        return new ListaDomainEntity(entity.getId(), dbResult);
+        entity.setItems(dbResult);
+        return entity;
     }
 
     public Optional<ListaDomainEntity> get(UUID uuid) {
@@ -57,5 +60,10 @@ public class ListaService {
     public void deleteItems(@NotNull ListaDomainEntity entity) {
         val listaItemDbEntityList = entity.getItems().stream().map(listaItemMapper::mapToDbEntity).toList();
         listaItemRepository.deleteAll(listaItemDbEntityList);
+    }
+
+    @Transactional
+    private void transactionalSaveListaId(UUID uuid) {
+        listaRepository.saveListId(uuid);
     }
 }

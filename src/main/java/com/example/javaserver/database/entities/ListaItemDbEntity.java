@@ -1,6 +1,5 @@
 package com.example.javaserver.database.entities;
 
-import com.example.javaserver.domain.ListaItemDomainEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -17,18 +16,17 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "lista_item")
 @Getter
-public class ListaItemDbEntity extends DbEntity implements DomainEntityMapping<ListaItemDomainEntity> {
+public class ListaItemDbEntity extends DbEntity {
 
-    @Column(name = "itemId")
-    private String itemId;
     @Column(name = "description")
     private String description;
     @Column(name = "lista_id")
     private UUID listaId;
 
-    @Override
-    public ListaItemDomainEntity toDomainEntity() {
-        return new ListaItemDomainEntity(itemId, description, listaId);
+    public ListaItemDbEntity(UUID id, String description, UUID listaId) {
+        this.id = id;
+        this.description = description;
+        this.listaId = listaId;
     }
 
 
@@ -39,11 +37,11 @@ public class ListaItemDbEntity extends DbEntity implements DomainEntityMapping<L
 
         ListaItemDbEntity that = (ListaItemDbEntity) o;
 
-        return itemId.equals(that.itemId);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return itemId.hashCode();
+        return id.hashCode();
     }
 }

@@ -7,7 +7,6 @@ import com.example.javaserver.services.ListaService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,12 @@ public class ListaController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<ResponseBody> saveItems(@Valid @RequestBody ListaRequestBody body) {
+    public ResponseEntity<ResponseBody> saveItems(
+            @Valid
+            @Validated(ListaDomainEntity.NullId.class)
+            @RequestBody
+            ListaRequestBody body
+    ) {
         logger.info("Received request to add a new Lista");
         logger.debug("{}", body);
 
@@ -87,9 +91,8 @@ public class ListaController {
 
     @DeleteMapping("/items")
     public ResponseEntity<ResponseBody> deleteItems(
-            @Validated(ListaDomainEntity.NotNullId.class) @RequestBody ListaRequestBody body,
-            @Valid @NotNull @RequestParam @Pattern(regexp = UUID_REGEX) UUID listaId) {
-        logger.info("Received request to delete items from a Lista with listaId: {}", listaId);
+            @Validated(ListaDomainEntity.NotNullId.class) @RequestBody ListaRequestBody body) {
+        logger.info("Received request to delete items from a Lista with listaId: {}", body.listaDomainEntity.getId());
         logger.debug("{}", body);
 
         try {
@@ -106,7 +109,4 @@ public class ListaController {
 
     private record ListaRequestBody(@Valid @NotNull @JsonProperty("lista") ListaDomainEntity listaDomainEntity) {
     }
-
-
-    private static final String UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
 }
