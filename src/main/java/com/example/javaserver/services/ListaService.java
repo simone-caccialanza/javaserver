@@ -43,7 +43,7 @@ public class ListaService {
 
     public ListaDomainEntity saveItems(@NotNull ListaDomainEntity entity) {
         val newItemsToSave = entity.getItems().stream()
-                .filter(item -> item.getId() == null)
+//                .filter(item -> item.getId() == null)
                 .map(listaItemMapper::mapToDbEntity)
                 .toList();
         val dbResult = listaItemRepository.saveAll(newItemsToSave)
