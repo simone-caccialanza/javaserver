@@ -78,7 +78,7 @@ public class ListaController {
 
         try {
             val result = listaService.saveItems(body.listaDomainEntity);
-            logger.info("Saved {} new items into db to listaId {}", result.getItems().size(), body.listaDomainEntity.getId());
+            logger.info("Saved {} new items into db to listaId {}", result.getItems().size(), body.listaDomainEntity.getId());//todo this log is wrong
             logger.debug("{}", result);
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, result), HttpStatus.OK);
         } catch (Exception e) {
@@ -88,16 +88,14 @@ public class ListaController {
         }
     }
 
-    @DeleteMapping("/items")
+    @DeleteMapping("/items/{itemId}")
     public ResponseEntity<ResponseBody> deleteItems(
-            @Validated(ListaDomainEntity.NotNullId.class) @RequestBody ListaRequestBody body) {
-        logger.info("Received request to delete items from a Lista with listaId: {}", body.listaDomainEntity.getId());
-        logger.debug("{}", body);
+            @PathVariable("itemId") UUID itemId) {
+        logger.info("Received request to delete items from a Lista with listaId: {}", itemId);
 
         try {
-            listaService.deleteItems(body.listaDomainEntity);
-            logger.info("Deleted {} items from db", body.listaDomainEntity.getItems().size());
-            logger.debug("{}", body.listaDomainEntity.getItems());
+            listaService.deleteById(itemId);
+            logger.info("Deleted {} from db", itemId);
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.KO)
