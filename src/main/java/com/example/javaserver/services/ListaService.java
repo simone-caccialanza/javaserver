@@ -62,6 +62,10 @@ public class ListaService {
         listaItemRepository.deleteAll(listaItemDbEntityList);
     }
 
+    public void deleteById(UUID id) {
+        listaItemRepository.deleteById(id);
+    }
+
     @Transactional
     private void transactionalSaveListaId(UUID uuid) {
         listaRepository.saveListId(uuid);
