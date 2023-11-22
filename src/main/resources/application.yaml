@@ -20,7 +20,19 @@ spring:
   quartz:
     job-store-type: jdbc
     jdbc:
-      initialize-schema: never
+      initialize-schema: always
+    properties.org.quartz:
+      scheduler.instanceName: MyScheduler
+      jobStore:
+        driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+        tablePrefix: QRTZ_
+        isClustered: false
+        dataSource: myDataSource
+      dataSource.myDataSource:
+        driver: com.mysql.jdbc.Driver
+        URL: jdbc:h2:~/javaserver
+        user: sa
+        password:
   mail:
     host: smtp.freesmtpservers.com
     port: 25
