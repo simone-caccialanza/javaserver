@@ -10,7 +10,7 @@ import java.util.UUID;
 public class ListaItemMapper implements DomainDbMapper<ListaItemDomainEntity, ListaItemDbEntity> {
     @Override
     public ListaItemDomainEntity mapToDomainEntity(ListaItemDbEntity entity) {
-        return new ListaItemDomainEntity(entity.getId(), entity.getDescription(), entity.getListaId(), entity.getFlagged());
+        return new ListaItemDomainEntity(entity.getId(), entity.getDescription(), entity.getListaId(), entity.getChecked());
     }
 
     @Override
