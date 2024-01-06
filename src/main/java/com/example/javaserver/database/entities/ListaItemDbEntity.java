@@ -29,7 +29,7 @@ public class ListaItemDbEntity extends DbEntity {
         this.id = id;
         this.description = description;
         this.listaId = listaId;
-        this.checked = checked != null && checked; //if flagged is null, default is false
+        this.checked = checked != null && checked; //if checked is null, default is false
     }
 
 
