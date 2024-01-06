@@ -19,7 +19,7 @@ public class ListaItemMapper implements DomainDbMapper<ListaItemDomainEntity, Li
                 entity.getId() != null ? entity.getId() : UUID.randomUUID(),
                 entity.getDescription(),
                 entity.getListaId(),
-                entity.getFlagged()
+                entity.getChecked()
         );
     }
 }
