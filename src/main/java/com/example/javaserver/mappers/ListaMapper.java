@@ -23,7 +23,7 @@ public class ListaMapper implements DomainDbMapper<ListaDomainEntity, ListaDbEnt
     public ListaDomainEntity mapToDomainEntity(ListaDbEntity entity) {
         return new ListaDomainEntity(entity.getId(),
                 entity.getItems().stream().map(item ->
-                        new ListaItemDomainEntity(item.getId(), item.getDescription(), item.getListaId())).toList());
+                        new ListaItemDomainEntity(item.getId(), item.getDescription(), item.getListaId(), item.getChecked())).toList());
     }
 
     @Override

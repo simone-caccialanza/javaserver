@@ -22,11 +22,14 @@ public class ListaItemDbEntity extends DbEntity {
     private String description;
     @Column(name = "lista_id")
     private UUID listaId;
+    @Column(name = "checked")
+    private Boolean checked = false;
 
-    public ListaItemDbEntity(UUID id, String description, UUID listaId) {
+    public ListaItemDbEntity(UUID id, String description, UUID listaId, Boolean checked) {
         this.id = id;
         this.description = description;
         this.listaId = listaId;
+        this.checked = checked != null && checked; //if checked is null, default is false
     }
 
 
