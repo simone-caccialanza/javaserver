@@ -17,6 +17,7 @@ public class ListaItemDomainEntity extends DomainEntity {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UUID listaId;
     private Boolean checked;
+    private Long timestamp;
 
 
     @Override
