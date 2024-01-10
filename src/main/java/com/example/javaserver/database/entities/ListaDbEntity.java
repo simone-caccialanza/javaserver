@@ -19,9 +19,12 @@ public class ListaDbEntity extends DbEntity {
     @JoinColumn(name = "lista_id")
     @Column(name = "items")
     private List<ListaItemDbEntity> items;
+    @Column(name = "friendly_id", unique = true)
+    private String friendlyId;
 
-    public ListaDbEntity(UUID id, List<ListaItemDbEntity> items) {
+    public ListaDbEntity(UUID id, List<ListaItemDbEntity> items, String friendlyId) {
         this.id = id;
         this.items = items;
+        this.friendlyId = friendlyId;
     }
 }

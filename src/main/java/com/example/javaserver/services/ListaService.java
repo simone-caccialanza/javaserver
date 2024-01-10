@@ -36,24 +36,31 @@ public class ListaService {
     @Transactional
     public ListaDomainEntity save(ListaDomainEntity entity) {
         val listaDbEntity = listaMapper.mapToDbEntity(entity);
-        transactionalSaveListaId(listaDbEntity.getId());
+        transactionalSaveListaId(listaDbEntity.getId(), listaDbEntity.getFriendlyId());
         val dbResult = listaRepository.save(listaDbEntity);
         return listaMapper.mapToDomainEntity(dbResult);
     }
 
     public ListaDomainEntity saveItems(@NotNull ListaDomainEntity entity) {
+        UUID listaId = listaRepository.findByFriendlyId(entity.getFriendlyId()).get().getId();
+        entity.getItems().forEach(item -> item.setListaId(listaId));
         val newItemsToSave = entity.getItems().stream()
-//                .filter(item -> item.getId() == null)
                 .map(listaItemMapper::mapToDbEntity)
                 .toList();
         val dbResult = listaItemRepository.saveAll(newItemsToSave)
                 .stream().map(listaItemMapper::mapToDomainEntity).toList();
         entity.setItems(dbResult);
+        entity.setId(listaId);
         return entity;
     }
 
     public Optional<ListaDomainEntity> get(UUID uuid) {
         val dbResult = listaRepository.findById(uuid);
+        return dbResult.map(listaMapper::mapToDomainEntity);
+    }
+
+    public Optional<ListaDomainEntity> get(String friendlyId) {
+        val dbResult = listaRepository.findByFriendlyId(friendlyId);
         return dbResult.map(listaMapper::mapToDomainEntity);
     }
 
@@ -67,7 +74,7 @@ public class ListaService {
     }
 
     @Transactional
-    private void transactionalSaveListaId(UUID uuid) {
-        listaRepository.saveListId(uuid);
+    private void transactionalSaveListaId(UUID uuid, String friendlyId) {
+        listaRepository.saveListId(uuid, friendlyId);
     }
 }
