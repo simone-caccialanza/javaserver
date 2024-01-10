@@ -30,10 +30,10 @@ public class ListaController {
     private ListaService listaService;
 
     @GetMapping("/items")
-    public ResponseEntity<ResponseBody> getItems(@RequestParam("listaId") UUID listaId) {
+    public ResponseEntity<ResponseBody> getItems(@RequestParam("listaId") String friendlyId) {
         try {
-            logger.info("Received request to retrieve a Lista with itemId {}", listaId);
-            Optional<ListaDomainEntity> serviceResult = listaService.get(listaId);
+            logger.info("Received request to retrieve a Lista with itemId {}", friendlyId);
+            Optional<ListaDomainEntity> serviceResult = listaService.get(friendlyId);
             return serviceResult.map(result -> {
                         logger.debug("Retrieved Lista from db: {}", result);
                         return new ResponseEntity<>(new ResponseBody(ResponseBody.Status.OK, result), HttpStatus.OK);
@@ -72,7 +72,7 @@ public class ListaController {
 
     @PatchMapping("/items")
     public ResponseEntity<ResponseBody> updateItems(
-            @Validated(ListaDomainEntity.NotNullId.class) @RequestBody ListaRequestBody body) {
+            @Validated(ListaDomainEntity.NotNullFriendlyId.class) @RequestBody ListaRequestBody body) {
         logger.info("Received request to update a Lista with listaId: {}", body.listaDomainEntity.getId());
         logger.debug("{}", body);
 

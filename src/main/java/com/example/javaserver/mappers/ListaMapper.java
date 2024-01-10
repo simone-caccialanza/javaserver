@@ -21,9 +21,12 @@ public class ListaMapper implements DomainDbMapper<ListaDomainEntity, ListaDbEnt
 
     @Override
     public ListaDomainEntity mapToDomainEntity(ListaDbEntity entity) {
-        return new ListaDomainEntity(entity.getId(),
+        return new ListaDomainEntity(
+                entity.getId(),
                 entity.getItems().stream().map(item ->
-                        new ListaItemDomainEntity(item.getId(), item.getDescription(), item.getListaId(), item.getChecked(), item.getTimestamp())).toList());
+                        new ListaItemDomainEntity(item.getId(), item.getDescription(), item.getListaId(), item.getChecked(), item.getTimestamp())).toList(),
+                entity.getFriendlyId()
+        );
     }
 
     @Override
@@ -31,6 +34,8 @@ public class ListaMapper implements DomainDbMapper<ListaDomainEntity, ListaDbEnt
         return new ListaDbEntity(
                 entity.getId() != null ? entity.getId() : UUID.randomUUID(),
                 entity.getItems().stream().map(itemsMapper::mapToDbEntity)
-                        .toList());
+                        .toList(),
+                entity.getFriendlyId()
+        );
     }
 }
