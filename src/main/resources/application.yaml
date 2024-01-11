@@ -58,7 +58,7 @@ jobs:
     enabled: false
     name: Temperature
     group: Temperature
-    repeat-interval: 10000
+    repeat-interval: 10000000
 open-meteo:
   base-url: https://api.open-meteo.com
   forecast: /v1/forecast
