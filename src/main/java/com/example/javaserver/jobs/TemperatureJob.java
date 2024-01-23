@@ -18,7 +18,7 @@ public class TemperatureJob implements Job {
     private TemperatureService temperatureService;
 
     @Value("${jobs.temperature-job.enabled}")
-    private static Boolean enabled;
+    private Boolean enabled;
 
     public TemperatureJob() {
         // Default constructor
