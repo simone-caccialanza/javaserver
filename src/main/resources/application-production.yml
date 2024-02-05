@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://javaserver-prod.cpk24y0483jq.eu-north-1.rds.amazonaws.com:3306/javaserver
+    driverClassName: org.mariadb.jdbc.Driver
+    platform: mariadb
+    username: admin
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties.org.quartz:
+      scheduler.instanceName: MyScheduler
+      jobStore:
+        driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+        tablePrefix: QRTZ_
+        isClustered: false
+        dataSource: quartzDataSource
+      dataSource:
+        driver: org.mariadb.jdbc.Driver
+        URL: jdbc:mariadb://javaserver-prod.cpk24y0483jq.eu-north-1.rds.amazonaws.com:3306/javaserver
+        user: admin
+        password: ${DB_PASSWORD}
+        hikari:
+          maximum-pool-size: 10
+          minimum-idle: 5
+          idle-timeout: 30000
+  mail:
+    host: smtp.freesmtpservers.com
+    port: 25
+    username: email@ahduio.com
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: true
+logging:
+  level:
+    org:
+      quartz: INFO
+      hibernate: INFO
+      springframework: INFO
+      springframework.mail: INFO
+    com.example.javaserver: INFO
+    com.zaxxer.hikari: INFO
+jobs:
+  temperature-job:
+    enabled: false
+    name: Temperature
+    group: Temperature
+    repeat-interval: 10000000
+open-meteo:
+  base-url: https://api.open-meteo.com
+  forecast: /v1/forecast

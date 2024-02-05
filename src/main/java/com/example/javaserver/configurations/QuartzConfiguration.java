@@ -22,11 +22,18 @@ public class QuartzConfiguration {
 
     @Bean
     @QuartzDataSource
-    public DataSource quartzDataSource() {
-        return DataSourceBuilder.create().url("jdbc:h2:~/javaserver;MODE=Oracle") // Replace with your H2 database URL
-                .driverClassName("org.h2.Driver")
-                .username("sa")
-                .password("").build();
+    public DataSource quartzDataSource(
+            @Value("${spring.quartz.properties.org.quartz.dataSource.URL}") String datasourceUrl,
+            @Value("${spring.quartz.properties.org.quartz.dataSource.driver}") String driver,
+            @Value("${spring.quartz.properties.org.quartz.dataSource.user}") String username,
+            @Value("${spring.quartz.properties.org.quartz.dataSource.password}") String password
+    ) {
+        return DataSourceBuilder.create()
+                .url(datasourceUrl)
+                .driverClassName(driver)
+                .username(username)
+                .password(password)
+                .build();
     }
 
     @Bean
