@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: simone caccialanza
+      changes:
+        - sqlFile:
+            path: db/changelog/scripts/create_table_test.sql
