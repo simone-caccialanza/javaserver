@@ -27,9 +27,9 @@ spring:
         driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
         tablePrefix: QRTZ_
         isClustered: false
-        dataSource: myDataSource
-      dataSource.myDataSource:
-        driver: com.mysql.jdbc.Driver
+        dataSource: quartzDataSource
+      dataSource:
+        driver: org.h2.Driver
         URL: jdbc:h2:~/javaserver
         user: sa
         password:
