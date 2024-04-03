@@ -31,6 +31,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-quartz'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'javax.validation:validation-api:2.0.1.Final'
@@ -57,6 +59,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.batch:spring-batch-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation platform('org.spockframework:spock-bom:2.3-groovy-4.0')
 	testImplementation 'org.spockframework:spock-core'
 }
@@ -70,4 +73,19 @@ tasks.withType(JavaCompile).configureEach {
 			'-Alombok.accessors.chain=true',
 			'-Alombok.accessors.fluent=true'
 	]
+}
+
+// This section causes useful test output to go to the terminal.
+test {
+	testLogging {
+		events "passed", "skipped", "failed" //, "standardOut", "standardError"
+
+		showExceptions true
+		exceptionFormat "full"
+		showCauses true
+		showStackTraces false
+
+		// Change to `true` for more verbose test output
+		showStandardStreams = false
+	}
 }

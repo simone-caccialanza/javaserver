@@ -44,6 +44,12 @@ spring:
           auth: false
           starttls:
             enable: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: classpath:keys/test_public_key.pem
+          audiences: http://localhost:8080
 logging:
   level:
     org:
@@ -51,6 +57,7 @@ logging:
       hibernate: INFO
       springframework: INFO
       springframework.mail: INFO
+      springframework.security: TRACE
     com.example.javaserver: DEBUG
     com.zaxxer.hikari: INFO
 jobs:
