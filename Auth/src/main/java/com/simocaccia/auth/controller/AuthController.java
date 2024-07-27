@@ -63,54 +63,6 @@ public class AuthController {
         return ResponseEntity.ok("OK");
     }
 
-    @GetMapping(
-            path = "/me"
-    )
-    public ResponseEntity<String> me() {
-        return ResponseEntity.ok("OK");
-    }
-
-    @GetMapping(
-            path = "/token"
-    )
-    public ResponseEntity<String> token() {
-        return ResponseEntity.ok("OK");
-    }
-
-    @GetMapping(
-            path = "/validate"
-    )
-    public ResponseEntity<String> validate() {
-        return ResponseEntity.ok("OK");
-    }
-
-    @GetMapping(
-            path = "/revoke"
-    )
-    public ResponseEntity<String> revoke() {
-        return ResponseEntity.ok("OK");
-    }
-
-    @GetMapping(
-            path = "/status"
-    )
-    public ResponseEntity<String> status() {
-        return ResponseEntity.ok("OK");
-    }
-
-    @GetMapping(
-            path = "/info"
-    )
-    public ResponseEntity<String> info() {
-        return ResponseEntity.ok("OK");
-    }
-
-    @GetMapping(
-            path = "/logoutAll"
-    )
-    public ResponseEntity<String> logoutAll() {
-        return ResponseEntity.ok("OK");
-    }
 
     @GetMapping(
             path = "/changePassword"
