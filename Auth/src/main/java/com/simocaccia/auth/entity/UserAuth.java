@@ -10,6 +10,7 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
@@ -41,6 +42,17 @@ public class UserAuth implements UserDetails, CredentialsContainer {
     private boolean credentialsNonExpired;
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @PrePersist
+    private void onCreate() {
+        accountNonExpired = true;
+        accountNonLocked = true;
+        credentialsNonExpired = true;
+        enabled = false;
+        createdAt = LocalDateTime.now();
+    }
 
     @Override
     public void eraseCredentials() {
@@ -80,5 +92,28 @@ public class UserAuth implements UserDetails, CredentialsContainer {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    /**
+     * Builder style setters
+     */
+    public UserAuth username(String username) {
+        this.username = username;
+        return this;
+    }
+
+    public UserAuth password(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public UserAuth email(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public UserAuth authorities(Set<GrantedAuthority> authorities) {
+        this.authorities = authorities;
+        return this;
     }
 }

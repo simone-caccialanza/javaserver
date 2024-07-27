@@ -2,7 +2,9 @@ package com.simocaccia.auth.controller;
 
 import com.simocaccia.auth.command.LoginCommand;
 import com.simocaccia.auth.command.RefreshCommand;
+import com.simocaccia.auth.command.RegisterCommand;
 import com.simocaccia.auth.controller.request.LoginRequest;
+import com.simocaccia.auth.controller.request.RegisterRequest;
 import com.simocaccia.auth.controller.response.LoginResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +19,14 @@ public class AuthController {
 
     private final LoginCommand loginCommand;
     private final RefreshCommand refreshCommand;
+    private final RegisterCommand registerCommand;
 
 
     @Autowired
-    public AuthController(LoginCommand loginCommand, RefreshCommand refreshCommand) {
+    public AuthController(LoginCommand loginCommand, RefreshCommand refreshCommand, RegisterCommand registerCommand) {
         this.loginCommand = loginCommand;
         this.refreshCommand = refreshCommand;
+        this.registerCommand = registerCommand;
     }
 
     @PostMapping("/login")
@@ -56,10 +60,13 @@ public class AuthController {
         return ResponseEntity.ok(jwtToken);
     }
 
-    @GetMapping(
+    @PostMapping(
             path = "/register"
     )
-    public ResponseEntity<String> register() {
+    public ResponseEntity<String> register(
+            @RequestBody RegisterRequest request
+    ) {
+        registerCommand.run(request);
         return ResponseEntity.ok("OK");
     }
 
