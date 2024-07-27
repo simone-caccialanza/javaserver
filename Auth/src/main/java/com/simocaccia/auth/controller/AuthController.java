@@ -1,14 +1,12 @@
 package com.simocaccia.auth.controller;
 
+import com.simocaccia.auth.command.LoginCommand;
+import com.simocaccia.auth.command.RefreshCommand;
 import com.simocaccia.auth.controller.request.LoginRequest;
 import com.simocaccia.auth.controller.response.LoginResponse;
-import com.simocaccia.auth.service.AuthenticationService;
-import com.simocaccia.auth.service.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,26 +14,28 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthController {
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+
+    private final LoginCommand loginCommand;
+    private final RefreshCommand refreshCommand;
+
 
     @Autowired
-    private AuthenticationService authenticationService;
+    public AuthController(LoginCommand loginCommand, RefreshCommand refreshCommand) {
+        this.loginCommand = loginCommand;
+        this.refreshCommand = refreshCommand;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody LoginRequest request,
+            @RequestHeader(value = "Authorization", required = false) String token
+    ) {
         if (request == null || request.authorities() == null || request.authorities().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        Authentication authenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(request.username(), request.password());
 
-        // 1. Attempt authentication
-        Authentication authentication = authenticationService.authenticate(authenticationToken);
+        String jwtToken = loginCommand.run(request, token);
 
-        // 2. Generate JWT token if successful
-        String jwtToken = jwtTokenProvider.generateToken(authentication);
-
-        // 3. Return response with JWT token
         return ResponseEntity.ok(new LoginResponse(jwtToken));
     }
 
@@ -49,8 +49,11 @@ public class AuthController {
     @GetMapping(
             path = "/refresh"
     )
-    public ResponseEntity<String> refresh() {
-        return ResponseEntity.ok("OK");
+    public ResponseEntity<String> refresh(
+            @RequestHeader("Authorization") String token
+    ) {
+        String jwtToken = refreshCommand.run(token);
+        return ResponseEntity.ok(jwtToken);
     }
 
     @GetMapping(
