@@ -39,7 +39,6 @@ public class AuthController {
         }
 
         String jwtToken = loginCommand.run(request, token);
-
         return ResponseEntity.ok(new LoginResponse(jwtToken));
     }
 

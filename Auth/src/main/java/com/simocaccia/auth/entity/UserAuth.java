@@ -4,6 +4,7 @@ import com.simocaccia.auth.util.GrantedAuthorityCollectionConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.CredentialsContainer;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor
+@ToString
 @Table(name = "user_auth")
 public class UserAuth implements UserDetails, CredentialsContainer {
     @Id

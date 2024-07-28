@@ -1,11 +1,13 @@
 package com.simocaccia.auth.service;
 
 import com.simocaccia.auth.repository.UserAuthRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -21,6 +23,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return userAuthRepository.findByUsernameOrEmailIgnoreCase(authentication.getPrincipal().toString(), authentication.getPrincipal().toString())
                 .map(user -> {
+                    log.debug("user found: " + user);
                     if (!user.isAccountNonExpired()) {
                         throw new AccountExpiredException("Account expired");
                     }
@@ -31,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         throw new CredentialsExpiredException("Credentials expired");
                     }
                     if (!user.isEnabled()) {
-                        throw new DisabledException("Credentials expired");
+                        throw new DisabledException("Account not enabled, verify your email to activate it");
                     }
 
                     if (authentication.getCredentials().toString().equals(user.getPassword())) {
@@ -42,7 +45,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     } else {
                         throw new BadCredentialsException("Wrong username or password");
                     }
-                })
-                .orElseThrow(() -> new BadCredentialsException("Wrong username or password"));
+                }).orElseThrow(() -> new BadCredentialsException("Wrong username or password"));
     }
 }

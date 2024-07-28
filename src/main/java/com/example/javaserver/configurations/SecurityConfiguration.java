@@ -13,9 +13,13 @@ public class SecurityConfiguration {
     SecurityFilterChain appSecurity(HttpSecurity http,
                                     ProblemDetailsAuthenticationEntryPoint entryPoint) throws Exception {
         http
-                .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+                .authorizeHttpRequests((authorize) ->
+                                authorize.anyRequest().authenticated()
+//                                .requestMatchers("**/auth/**").permitAll()
+//                                .requestMatchers("**/health/**").authenticated()
+                )
                 .oauth2ResourceServer((oauth2) -> oauth2
-                        .authenticationEntryPoint(entryPoint) // <== Add it here!
+                        .authenticationEntryPoint(entryPoint)
                         .jwt(Customizer.withDefaults())
                 );
         return http.build();
